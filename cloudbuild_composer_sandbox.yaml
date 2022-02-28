@@ -1,0 +1,27 @@
+steps:
+  #composer creation
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  id: Deploy
+  entrypoint: bash
+  args: ['-c', 'gcloud composer environments create mfrm-pipeline-composer-v2-testing --network vpc-dev-mfrm-sandbox-10-134-8-0-23 --subnetwork subnet-dev-mfrm-sandbox-10-134-8-0-24-central1 --location us-central1 --zone us-central1-c --machine-type n1-standard-4 --node-count 3 --python-version 3 --image-version composer-1.17.8-airflow-1.10.15 --disk-size 50 --service-account svc-cloud-composer@dev-mfrm-sandbox.iam.gserviceaccount.com']
+  #Environment Variables
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  id: Deploy
+  entrypoint: bash
+  args: ['-c', 'gcloud composer environments create mfrm-pipeline-composer-v2-testing \ --location us-central1 \ --update-env-variables=mattressfinder_bucket_name=dev-mfrm-sandbox-bucket,mfrm_bucket_name=dev-mfrm-sandbox-bucket,mfrmProjectId=dev-mfrm-sandbox,mattressFinderProjectId=dev-mfrm-sandbox,timeout_BQ=310,timeout_session=300,secret_id=GCloudSQLServerSecret2,mattressfinder_sql_db=MattressFinder,mattressfinder_sql_host='10.134.12.4',mattressfinder_sql_user=mattressfinder-gcp,mfrm_es_source_bucket=dev-mfrm-sandbox-processing,sql_load_chunk_size=500,graph_db_host_name=neo4j,graph_db_path='neo4j://neo4j-cluster-1.mfrm.com:7687',jobs_config_table='dev-mfrm-sandbox.mfrm_config_logging_data.jobs_config_data',marketing_error_table='dev-mfrm-sandbox.mfrm_config_logging_data.stagging_errors_table'']
+#Set python packages
+  # Install dependencies
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  id: Deploy
+  entrypoint: bash
+  args: ['-c', 'gcloud composer environments create mfrm-pipeline-composer-v2-testing --update-pypi-packages-from-file ./YamlFiles/requirements/requirements.txt --location us-central1']
+  
+#- name: python
+#  entrypoint: pip
+#  args: ["install", "-r", "requirements.txt"]
+#- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+#  id: Deploy
+#  entrypoint: bash
+#  args: ['-c', 'gcloud composer environments create mfrm-pipeline-composer-v2 --update-pypi-packages-from-file requirements.txt --location us-central1']
+  
+  
